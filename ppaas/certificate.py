@@ -39,6 +39,18 @@ class Certificate(object):
         result, status = self.client.get('/masters/%s/certs/%s' % (self.master.uuid, self.hostname))
         return result
 
+    def delete(self):
+        result, status = self.client.delete('/masters/%s/certs/%s' % (self.master.uuid, self.hostname))
+        return result
+
+    def revoke(self):
+        result, status = self.client.post('/masters/%s/certs/%s/revoke' % (self.master.uuid, self.hostname))
+        return result
+
+    def sign(self):
+        result, status = self.client.post('/masters/%s/certs/%s/sign' % (self.master.uuid, self.hostname))
+        return result
+
     def __repr__(self):
         return "<Agent Certificate %s@%s>" % (self.hostname, self.master.uuid)
 
