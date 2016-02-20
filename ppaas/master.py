@@ -73,8 +73,7 @@ class Master(object):
             return False
 
     def certificate(self, hostname):
-        data, result = self.client.get('/masters/%s/certs/%s' % (self.uuid, hostname))
-        return data
+        return Certificate(self, hostname)
 
     @property
     def crl(self):
