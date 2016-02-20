@@ -15,4 +15,5 @@
 
 from master import Master
 from certificate import Certificate
+from deploy_key import DeployKey
 from api_client import ApiClient
