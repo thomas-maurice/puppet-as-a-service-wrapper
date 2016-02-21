@@ -161,10 +161,10 @@ class Master(object):
         :rtype: List of ppaas.Certificate
 
         """
+        certificates = Certificate.get_certificates(self, self.client)
         if status is None:
-            return Certificate.get_certificates(self, self.client)
+            return certificates
         else:
-            certificates = Certificate.get_certificates(self, self.client)
             return [cert for cert in certificates if cert.status['message'] == status]
 
     def __repr__(self):
