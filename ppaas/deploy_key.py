@@ -45,6 +45,8 @@ class DeployKey(object):
 
         :param name: The name of the deploy key you want to load
         :type name: str
+        :param cached_data: Cached data to instantiate the master
+        :type cached_data: dict
 
         :Example:
 
@@ -67,9 +69,17 @@ class DeployKey(object):
         """
         self.client = ApiClient()
         self.name = name
+        self.reload_data(cached_data)
 
-        if cached_data:
-            self.cached_data = cached_data
+    def reload_data(self, refreshed_datas=None):
+        """Reloads datas in the cached_data properties of a deploy key
+
+        :param refreshed_datas: Data to use to reload cached_data property of deploy key
+        :type refreshed_datas: dict
+
+        """
+        if refreshed_datas:
+            self.cached_data = refreshed_datas
         else:
             self.cached_data, _ = self.client.get('/deploy-keys/%s' % (self.name))
 

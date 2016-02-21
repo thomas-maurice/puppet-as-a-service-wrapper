@@ -77,6 +77,9 @@ class Master(object):
 
         :param uuid: UUID of the master
         :type uuid: str
+        :param cached_data: Cached data to instantiate the master
+        :type cached_data: dict
+
 
         :Example:
         >>> ppaas.Master('0e85b81f-5a29-4e2b-a46c-e024049acb07')
@@ -88,9 +91,17 @@ class Master(object):
         """
         self.client = ApiClient()
         self.uuid = uuid
+        self.reload_data(cached_data)
 
-        if cached_data:
-            self.cached_data = cached_data
+    def reload_data(self, refreshed_datas=None):
+        """Reloads datas in the cached_data properties of the pupet master
+
+        :param refreshed_datas: Data to use to reload cached_data property of master
+        :type refreshed_datas: dict
+
+        """
+        if refreshed_datas:
+            self.cached_data = refreshed_datas
         else:
             self.cached_data, _ = self.client.get('/masters/%s' % self.uuid)
 

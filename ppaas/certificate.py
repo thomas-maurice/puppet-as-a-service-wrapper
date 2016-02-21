@@ -53,6 +53,8 @@ class Certificate(object):
         :param hostname: The hostname of the agent
         :type master: ppaas.Master
         :type hostname: str
+        :param cached_data: Cached data to instantiate the master
+        :type cached_data: dict
 
         :Example:
         >>> ppaas.Master.get_masters()
@@ -68,10 +70,19 @@ class Certificate(object):
         self.client = ApiClient()
         self.hostname = hostname
         self.master = master
-        if cached_data:
-            self.cached_data = cached_data
+        self.reload_data(cached_data)
+
+    def reload_data(self, refreshed_datas=None):
+        """Reloads datas in the cached_data properties of a certificate
+
+        :param refreshed_datas: Data to use to reload cached_data property of certificate
+        :type refreshed_datas: dict
+
+        """
+        if refreshed_datas:
+            self.cached_data = refreshed_datas
         else:
-            self.cached_data, _ = self.client.get('/masters/%s/certs/%s' % (self.master.uuid, hostname))
+            self.cached_data, _ = self.client.get('/masters/%s/certs/%s' % (self.master.uuid, self.hostname))
 
     @staticmethod
     def get_certificates(master, client=None):
