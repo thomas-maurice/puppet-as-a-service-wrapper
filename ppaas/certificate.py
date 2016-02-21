@@ -50,8 +50,8 @@ class Certificate(object):
         """Creates a new object representing an *existing* agent certificate
 
         :param master: The Master the wanted certificate is attached to
-        :param hostname: The hostname of the agent
         :type master: ppaas.Master
+        :param hostname: The hostname of the agent
         :type hostname: str
         :param cached_data: Cached data to instantiate the master
         :type cached_data: dict
@@ -144,6 +144,7 @@ class Certificate(object):
         :rtype: None
         """
         result, status = self.client.post('/masters/%s/certs/%s/revoke' % (self.master.uuid, self.hostname))
+        self.reload_data()
         return result
 
     def sign(self):
@@ -153,6 +154,7 @@ class Certificate(object):
         :rtype: None
         """
         result, status = self.client.post('/masters/%s/certs/%s/sign' % (self.master.uuid, self.hostname))
+        self.reload_data()
         return result
 
     def __repr__(self):
