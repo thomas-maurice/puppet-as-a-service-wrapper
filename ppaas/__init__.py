@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-         DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+"""Simple pythonic interface to OVH's Puppet as a Service Lab"""
+
+__author__  = "Thomas Maurice <thomas@maurice.fr>"
+__version__ = "0.0.1"
+__credits__ = ["Thomas Maurice", "Balthazar Rouberol"]
+__status__  = "Developpement"
+__license__ = """
+       DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
                 Version 2, December 2004
  Copyright (C) 2015 Thomas Maurice <thomas@maurice.fr>
  Everyone is permitted to copy and distribute verbatim or modified
@@ -16,4 +22,4 @@
 from master import Master
 from certificate import Certificate
 from deploy_key import DeployKey
-from api_client import ApiClient
+from client import ApiClient
