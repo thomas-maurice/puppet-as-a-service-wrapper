@@ -106,7 +106,7 @@ class Master(object):
 
         :Example:
 
-        >>> ppaas.Master.get_deploy_keys()
+        >>> ppaas.Master.get_masters()
         [<Puppet Master 0e85b81f-5a29-4e2b-a46c-e024049acb07>]
         """
         if not client:
