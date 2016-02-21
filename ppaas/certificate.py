@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """
          DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
@@ -12,8 +13,8 @@
   0. You just DO WHAT THE FUCK YOU WANT TO.
 """
 
-
 from client import ApiClient
+
 
 class Certificate(object):
     def __init__(self, master, hostname):

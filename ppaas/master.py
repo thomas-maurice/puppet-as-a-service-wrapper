@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 """
          DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
