@@ -18,37 +18,48 @@ import requests
 import json
 import os
 
+
 class APIError(Exception):
     """Base exception class"""
+
 
 class InvalidResponse(APIError):
     """Raised when api response is not valid json"""
 
+
 class ResourceNotFoundError(APIError):
     """Raised when requested resource does not exist."""
+
 
 class BadParametersError(APIError):
     """Raised when request contains bad parameters."""
 
+
 class NetworkError(APIError):
     """Raised when there is an error from network layer."""
+
 
 class Forbidden(APIError):
     """Raised when there is a permission issue"""
 
+
 class ConfigurationNotFoundException(APIError):
     """Raised when there is an error from network layer."""
+
 
 class ApiClient():
     def __init__(self):
         """We try to load the conf from  a set of defined pathes"""
         conf_file = None
-        conf = ConfigParser.ConfigParser()
-        for path in ["ppaas.conf", os.path.join(os.environ['HOME'], ".ppaas.conf"), "/etc/ppaas.conf"]:
+        for path in [
+            "ppaas.conf",
+            os.path.join(os.environ['HOME'], ".ppaas.conf"),
+            "/etc/ppaas.conf"
+        ]:
             if os.path.exists(path):
                 conf_file = path
                 break
-        if conf_file == None:
+        if conf_file is None:
             raise ConfigurationNotFoundException
         conf = ConfigParser.ConfigParser()
         conf.read(conf_file)
@@ -76,10 +87,11 @@ class ApiClient():
             body = json.dumps(data)
             headers.update({"Content-Type": "application/json"})
 
-        call_result = requests.request(method,
+        call_result = requests.request(
+            method,
             path,
             params=params,
-            auth=requests.auth.HTTPBasicAuth(self.user, self.passw),
+            auth=(self.user, self.passw),
             data=body,
             timeout=self.timeout
         )
@@ -87,7 +99,7 @@ class ApiClient():
         result = None
 
         try:
-            if call_result.text != "":
+            if call_result.text:
                 result = call_result.json()
         except ValueError as error:
             raise InvalidResponse("Failed to decode API response", error)

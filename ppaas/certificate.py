@@ -12,9 +12,6 @@
   0. You just DO WHAT THE FUCK YOU WANT TO.
 """
 
-import json
-import sys
-import os
 
 from api_client import ApiClient
 
