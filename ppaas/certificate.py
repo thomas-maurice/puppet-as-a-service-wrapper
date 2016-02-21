@@ -28,7 +28,7 @@ class Certificate(object):
         an HTTP call will be issued, so make sure to use the cache if needed.
       * Dictionnary lookup is done via the __getattr__ overloaded method. It
         is a bit hacky but it does the job. For instance to get the fingerprint
-        of your certificare, you can type `cert.fingerprint`, this will issue an
+        of your certificate, you can type `cert.fingerprint`, this will issue an
         HTTP request and return the corresponding dictionary value
 
     An example json representation of what this class may look like :
