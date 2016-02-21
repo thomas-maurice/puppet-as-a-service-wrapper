@@ -1,0 +1,16 @@
+language: python
+python:
+  - "2.7"
+env:
+  - COMMIT=${TRAVIS_COMMIT::8}
+install: "pip install -r requirements.txt"
+script: nosetests
+deploy:
+  provider: pypi
+  user: tmaurice
+  password:
+    secure: "tjtCX0SB1RNDHihOibrsPFi8KBlG2eSWwZkaCd99VnLr1GhP/9eUqMogObriZg8rzF2tvslpa8mKOJqEEUWTTXHQpxnpE3lRFvTShoQIASECPN57QH1EB0k2zh9l3zeBqhK6oJkOWoGa0BFTUc5OQYqCBFwnwhUFmyDesEER017xXOtIurczNp10gMXoWvfDIRQY+HBySYkAc/aknZDmNR7ePrKGMchML/qR4foh53rkzCxjFYK8RsDL6qUkEMBjkoB17/0WTHn4LGSVLQOP5Atff4gL2nZ3k+7w/zZrM9saDoHh5zLofrNXz/kmgkpYEX4hsb13CRH8iPEnHCjAkTS2QEdrDDuhJksEnszfh4P5yoo2CXpG5eTk2mgqVyJrKhtJh0GnsfoKBMcTZa4SYXDM6xuPap7udF7qD6xsgqeKQ0uaZ2xVQxDiNAUOVLncMgQ8U/C4Q1lWJ09fGOFF98bSeN0kcKLVoJkgFzu+oIaisCw6heWbXIzlxX3+fC+t2+qUAlHdkK3KUDOvhMvpbfPgk+H0Qio8CKiE5yp8LDk+0kCoFM4Q2pikwxG9hqUzdWEVmFF4mifHdOVnI5MC+WbuNKK7Lje0GcOVfjmtKdQIaRfNw4YtFcGs3NQyTVKOxN9AIfT7p4lvvT/Vd/sSpk75v1o7iqsm2HSj6bMA9PE="
+  on:
+    tags: true
+    repo: thomas-maurice/puppet-as-a-service-wrapper
+    python: "2.7"
