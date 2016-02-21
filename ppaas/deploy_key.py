@@ -152,7 +152,6 @@ class DeployKey(object):
         :return: The value of the field
         :rtype: Any primitive type
         """
-        data, status = self.client.get('/deploy-keys/%s' % (self.name))
-        if name in data:
-            return data[name]
+        if name in self.cached_data:
+            return self.cached_data[name]
         return super(DeployKey, self).__getattr__(name)

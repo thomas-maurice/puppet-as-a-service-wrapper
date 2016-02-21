@@ -305,7 +305,6 @@ class Master(object):
         :return: The value of the field
         :rtype: Any primitive type
         """
-        data, status = self.client.get('/masters/%s' % self.uuid)
-        if name in data:
-            return data[name]
+        if name in self.cached_data:
+            return self.cached_data[name]
         return super(Master, self).__getattr__(name)
