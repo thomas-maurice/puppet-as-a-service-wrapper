@@ -25,11 +25,11 @@ class DeployKey(object):
       * When loaded it will cache some data in self.cached_data (it will
         cache its json representation according to the API)
       * Everytime you want to get data from the object, like key.fingerprint,
-        an HTTP call will be issued, so make sure to use the cache if needed.
+        the cache will be used, so make sure to call reload_datas if updates has been done.
       * Dictionnary lookup is done via the __getattr__ overloaded method. It
         is a bit hacky but it does the job. For instance to get the public part
-        of your key, you can type `key.public`, this will issue an HTTP request
-        and return the corresponding dictionary value
+        of your key, you can type `key.public`, this will query the
+        cached value in the object
 
     An example json representation of what this class may look like :
     .. code-block:: json

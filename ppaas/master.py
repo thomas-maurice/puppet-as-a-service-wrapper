@@ -40,11 +40,12 @@ class Master(object):
       * When loaded it will cache some data in self.cached_data (it will
         cache its json representation according to the API)
       * Everytime you want to get data from the object, like certificate.fingerprint,
-        an HTTP call will be issued, so make sure to use the cache if needed.
+        the cache will be used, so make sure to call reload_datas if updates has been done.
       * Dictionnary lookup is done via the __getattr__ overloaded method. It
         is a bit hacky but it does the job. For instance to get the hostname
-        of your master, you can type `master.hostname`, this will issue an
-        HTTP request and return the corresponding dictionary value
+        of your master, you can type `master.hostname`, this will query the
+        cached value in the object
+
 
     An example json representation of what this class may look like :
     .. code-block:: json
