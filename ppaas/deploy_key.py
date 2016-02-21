@@ -40,7 +40,7 @@ class DeployKey(object):
             "public": "ssh-rsa AAAAB3NzaC1yc2EAAAAD[...]XP1BmhOtTOw=="
         }
     """
-    def __init__(self, name):
+    def __init__(self, name, cached_data):
         """Creates a new object representing an *existing* deploy key
 
         :param name: The name of the deploy key you want to load
@@ -67,7 +67,11 @@ class DeployKey(object):
         """
         self.client = ApiClient()
         self.name = name
-        self.cached_data, _ = self.client.get('/deploy-keys/%s' % (self.name))
+
+        if cached_data:
+            self.cached_data = cached_data
+        else:
+            self.cached_data, _ = self.client.get('/deploy-keys/%s' % (self.name))
 
     @staticmethod
     def get_deploy_keys(client=None):
@@ -89,7 +93,7 @@ class DeployKey(object):
         result, status = client.get('/deploy-keys')
         keys = []
         for key in result['deploy_keys']:
-            keys.append(DeployKey(key['name']))
+            keys.append(DeployKey(key['name'], key))
         return keys
 
     @staticmethod
@@ -110,7 +114,7 @@ class DeployKey(object):
         if not client:
             client = ApiClient()
         result, status = client.post('/deploy-keys', data={'name': name})
-        return DeployKey(name)
+        return DeployKey(name, result)
 
     def delete(self):
         """Deletes the current instance of DeployKey.
