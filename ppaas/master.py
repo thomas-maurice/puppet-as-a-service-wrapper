@@ -19,8 +19,10 @@ import os
 from api_client import ApiClient
 from certificate import Certificate
 
+
 def pretty_print(d):
-    return json.dumps(d, sort_keys=True,indent=4, separators=(',', ': '))
+    return json.dumps(d, sort_keys=True, indent=4, separators=(',', ': '))
+
 
 class Master(object):
     def __init__(self, uuid):
@@ -49,7 +51,7 @@ class Master(object):
         return None
 
     def get_certificates(self, status=None):
-        if status == None:
+        if status is None:
             return Certificate.get_certificates(self, self.client)
         else:
             certificates = Certificate.get_certificates(self, self.client)
@@ -98,7 +100,6 @@ class Master(object):
     def to_dict(self):
         result, status = self.client.get('/masters')
         return result
-
 
     def __getattr__(self, name):
         data, status = self.client.get('/masters/%s' % self.uuid)
