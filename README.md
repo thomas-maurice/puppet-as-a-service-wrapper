@@ -1,5 +1,9 @@
 # Puppet as a service API wrapper
 
+[![Build Status](https://travis-ci.org/thomas-maurice/puppet-as-a-service-wrapper.svg?branch=v0.0.1)](https://travis-ci.org/thomas-maurice/puppet-as-a-service-wrapper)
+[![PyPi](https://img.shields.io/pypi/dm/ppaas.svg)](https://pypi.python.org/pypi/ppaas)
+[![PyPI](https://img.shields.io/pypi/v/ppaas.svg)](https://pypi.python.org/pypi/ppaas)
+
 This is a simple python wrapper to the [Puppet aaS](https://www.runabove.com/puppet-as-a-service.xml)
 API exposed by [OVH](https://ovh.com).
 
