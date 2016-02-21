@@ -72,7 +72,7 @@ class Master(object):
             "vars": {}
         }
     """
-    def __init__(self, uuid):
+    def __init__(self, uuid, cached_data=None):
         """Creates a new object representing an *existing* puppet master
 
         :param uuid: UUID of the master
@@ -88,7 +88,11 @@ class Master(object):
         """
         self.client = ApiClient()
         self.uuid = uuid
-        self.cached_data, _ = self.client.get('/masters/%s' % self.uuid)
+
+        if cached_data:
+            self.cached_data = cached_data
+        else:
+            self.cached_data, _ = self.client.get('/masters/%s' % self.uuid)
 
     @staticmethod
     def get_masters(client=None):
@@ -110,7 +114,7 @@ class Master(object):
         result, status = client.get('/masters')
         masters = []
         for master in result['masters']:
-            masters.append(Master(master['id']))
+            masters.append(Master(master['id'], master))
         return masters
 
     @staticmethod
