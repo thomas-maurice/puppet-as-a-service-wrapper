@@ -13,8 +13,6 @@
 """
 
 import json
-import sys
-import os
 
 from api_client import ApiClient
 from certificate import Certificate
