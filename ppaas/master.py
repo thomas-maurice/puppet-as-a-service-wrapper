@@ -107,6 +107,48 @@ class Master(object):
             self.cached_data, _ = self.client.get('/masters/%s' % self.uuid)
 
     @staticmethod
+    def create_master(name, source, deploy_key, vars={}, nb=1, type=None, hierarchy=[], hieras=[], client=None):
+        """ Creates a Pupper master
+
+        :param name: Name of the puppet master
+        :type name: str
+        :param source: Source git repository of the puppet master
+        :type source: str
+        :param deploy_key: Deploy key to link with your puppet master
+        :type deploy_key: ppaas.DeployKey
+        :param nb: Number of servers for the master
+        :type nb: int
+        :param type: Kind of server to use
+        :type type: str
+        :param hierarchy: Array of hierarchies
+        :type hierarchy: list
+        :param hieras: Array of hiera backend
+        :type hieras: list
+        :param client: A client object you want to pass, if empty a new one will be created
+        :type client: ppaas.ApiClient
+
+        :return: The newly created puppet master
+        :rtype: Master
+
+        :Example:
+        >>> ppaas.Master.create_master("master1", "git@github.com:puppet/puppet.git", "github")
+        <Puppet Master 0e85b81f-5a29-4e2b-a46c-e024049acb07>
+        >>> master.name
+        'master1'
+
+        """
+        payload = {"name": name, "source": source, "deploy_key": deploy_key, "nb": nb,
+                "hierarchy": hierarchy, "hieras": hieras, "vars": vars}
+        if type:
+            payload["type"] = type
+
+        if not client:
+            client = ApiClient()
+
+        result, _ = client.post("/masters", data=payload)
+        return Master(result["id"], result)
+
+    @staticmethod
     def get_masters(client=None):
         """Retrieves all your puppet masters
 
