@@ -46,7 +46,7 @@ class Certificate(object):
             }
         }
     """
-    def __init__(self, master, hostname):
+    def __init__(self, master, hostname, cached_data=None):
         """Creates a new object representing an *existing* agent certificate
 
         :param master: The Master the wanted certificate is attached to
@@ -68,7 +68,10 @@ class Certificate(object):
         self.client = ApiClient()
         self.hostname = hostname
         self.master = master
-        self.cached_data, _ = self.client.get('/masters/%s/certs/%s' % (self.master.uuid, hostname))
+        if cached_data:
+            self.cached_data = cached_data
+        else:
+            self.cached_data, _ = self.client.get('/masters/%s/certs/%s' % (self.master.uuid, hostname))
 
     @staticmethod
     def get_certificates(master, client=None):
@@ -95,7 +98,7 @@ class Certificate(object):
         result, status = client.get('/masters/%s/certs' % master.uuid)
         certificates = []
         for certificate in result['certs']:
-            certificates.append(Certificate(master, certificate['hostname']))
+            certificates.append(Certificate(master, certificate['hostname'], certificate))
         return certificates
 
     def to_dict(self):
