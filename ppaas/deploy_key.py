@@ -13,7 +13,7 @@
 """
 
 
-from api_client import ApiClient
+from client import ApiClient
 
 
 class DeployKey(object):

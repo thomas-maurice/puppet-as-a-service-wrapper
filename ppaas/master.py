@@ -14,7 +14,7 @@
 
 import json
 
-from api_client import ApiClient
+from client import ApiClient
 from certificate import Certificate
 
 
