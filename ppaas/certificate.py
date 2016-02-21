@@ -25,11 +25,11 @@ class Certificate(object):
       * When loaded it will cache some data in self.cached_data (it will
         cache its json representation according to the API)
       * Everytime you want to get data from the object, like certificate.fingerprint,
-        an HTTP call will be issued, so make sure to use the cache if needed.
+        the cache will be used, so make sure to call reload_datas if updates has been done.
       * Dictionnary lookup is done via the __getattr__ overloaded method. It
         is a bit hacky but it does the job. For instance to get the fingerprint
-        of your certificate, you can type `cert.fingerprint`, this will issue an
-        HTTP request and return the corresponding dictionary value
+        of your certificate, you can type `cert.fingerprint`, this will query the
+        cached value in the object
 
     An example json representation of what this class may look like :
     .. code-block:: json
@@ -46,13 +46,15 @@ class Certificate(object):
             }
         }
     """
-    def __init__(self, master, hostname):
+    def __init__(self, master, hostname, cached_data=None):
         """Creates a new object representing an *existing* agent certificate
 
         :param master: The Master the wanted certificate is attached to
-        :param hostname: The hostname of the agent
         :type master: ppaas.Master
+        :param hostname: The hostname of the agent
         :type hostname: str
+        :param cached_data: Cached data to instantiate the master
+        :type cached_data: dict
 
         :Example:
         >>> ppaas.Master.get_masters()
@@ -68,7 +70,19 @@ class Certificate(object):
         self.client = ApiClient()
         self.hostname = hostname
         self.master = master
-        self.cached_data, _ = self.client.get('/masters/%s/certs/%s' % (self.master.uuid, hostname))
+        self.reload_data(cached_data)
+
+    def reload_data(self, refreshed_datas=None):
+        """Reloads datas in the cached_data properties of a certificate
+
+        :param refreshed_datas: Data to use to reload cached_data property of certificate
+        :type refreshed_datas: dict
+
+        """
+        if refreshed_datas:
+            self.cached_data = refreshed_datas
+        else:
+            self.cached_data, _ = self.client.get('/masters/%s/certs/%s' % (self.master.uuid, self.hostname))
 
     @staticmethod
     def get_certificates(master, client=None):
@@ -95,7 +109,7 @@ class Certificate(object):
         result, status = client.get('/masters/%s/certs' % master.uuid)
         certificates = []
         for certificate in result['certs']:
-            certificates.append(Certificate(master, certificate['hostname']))
+            certificates.append(Certificate(master, certificate['hostname'], certificate))
         return certificates
 
     def to_dict(self):
@@ -130,6 +144,7 @@ class Certificate(object):
         :rtype: None
         """
         result, status = self.client.post('/masters/%s/certs/%s/revoke' % (self.master.uuid, self.hostname))
+        self.reload_data()
         return result
 
     def sign(self):
@@ -139,6 +154,7 @@ class Certificate(object):
         :rtype: None
         """
         result, status = self.client.post('/masters/%s/certs/%s/sign' % (self.master.uuid, self.hostname))
+        self.reload_data()
         return result
 
     def __repr__(self):
@@ -165,7 +181,6 @@ class Certificate(object):
         :return: The value of the field
         :rtype: Any primitive type
         """
-        data, status = self.client.get('/masters/%s/certs/%s' % (self.master.uuid, self.hostname))
-        if name in data:
-            return data[name]
+        if name in self.cached_data:
+            return self.cached_data[name]
         return super(Certificate, self).__getattr__(name)

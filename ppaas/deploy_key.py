@@ -25,11 +25,11 @@ class DeployKey(object):
       * When loaded it will cache some data in self.cached_data (it will
         cache its json representation according to the API)
       * Everytime you want to get data from the object, like key.fingerprint,
-        an HTTP call will be issued, so make sure to use the cache if needed.
+        the cache will be used, so make sure to call reload_datas if updates has been done.
       * Dictionnary lookup is done via the __getattr__ overloaded method. It
         is a bit hacky but it does the job. For instance to get the public part
-        of your key, you can type `key.public`, this will issue an HTTP request
-        and return the corresponding dictionary value
+        of your key, you can type `key.public`, this will query the
+        cached value in the object
 
     An example json representation of what this class may look like :
     .. code-block:: json
@@ -40,11 +40,13 @@ class DeployKey(object):
             "public": "ssh-rsa AAAAB3NzaC1yc2EAAAAD[...]XP1BmhOtTOw=="
         }
     """
-    def __init__(self, name):
+    def __init__(self, name, cached_data):
         """Creates a new object representing an *existing* deploy key
 
         :param name: The name of the deploy key you want to load
         :type name: str
+        :param cached_data: Cached data to instantiate the master
+        :type cached_data: dict
 
         :Example:
 
@@ -67,7 +69,19 @@ class DeployKey(object):
         """
         self.client = ApiClient()
         self.name = name
-        self.cached_data, _ = self.client.get('/deploy-keys/%s' % (self.name))
+        self.reload_data(cached_data)
+
+    def reload_data(self, refreshed_datas=None):
+        """Reloads datas in the cached_data properties of a deploy key
+
+        :param refreshed_datas: Data to use to reload cached_data property of deploy key
+        :type refreshed_datas: dict
+
+        """
+        if refreshed_datas:
+            self.cached_data = refreshed_datas
+        else:
+            self.cached_data, _ = self.client.get('/deploy-keys/%s' % (self.name))
 
     @staticmethod
     def get_deploy_keys(client=None):
@@ -89,7 +103,7 @@ class DeployKey(object):
         result, status = client.get('/deploy-keys')
         keys = []
         for key in result['deploy_keys']:
-            keys.append(DeployKey(key['name']))
+            keys.append(DeployKey(key['name'], key))
         return keys
 
     @staticmethod
@@ -110,7 +124,7 @@ class DeployKey(object):
         if not client:
             client = ApiClient()
         result, status = client.post('/deploy-keys', data={'name': name})
-        return DeployKey(name)
+        return DeployKey(name, result)
 
     def delete(self):
         """Deletes the current instance of DeployKey.
@@ -152,7 +166,6 @@ class DeployKey(object):
         :return: The value of the field
         :rtype: Any primitive type
         """
-        data, status = self.client.get('/deploy-keys/%s' % (self.name))
-        if name in data:
-            return data[name]
+        if name in self.cached_data:
+            return self.cached_data[name]
         return super(DeployKey, self).__getattr__(name)

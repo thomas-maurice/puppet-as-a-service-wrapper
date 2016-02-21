@@ -40,11 +40,12 @@ class Master(object):
       * When loaded it will cache some data in self.cached_data (it will
         cache its json representation according to the API)
       * Everytime you want to get data from the object, like certificate.fingerprint,
-        an HTTP call will be issued, so make sure to use the cache if needed.
+        the cache will be used, so make sure to call reload_datas if updates has been done.
       * Dictionnary lookup is done via the __getattr__ overloaded method. It
         is a bit hacky but it does the job. For instance to get the hostname
-        of your master, you can type `master.hostname`, this will issue an
-        HTTP request and return the corresponding dictionary value
+        of your master, you can type `master.hostname`, this will query the
+        cached value in the object
+
 
     An example json representation of what this class may look like :
     .. code-block:: json
@@ -72,11 +73,14 @@ class Master(object):
             "vars": {}
         }
     """
-    def __init__(self, uuid):
+    def __init__(self, uuid, cached_data=None):
         """Creates a new object representing an *existing* puppet master
 
         :param uuid: UUID of the master
         :type uuid: str
+        :param cached_data: Cached data to instantiate the master
+        :type cached_data: dict
+
 
         :Example:
         >>> ppaas.Master('0e85b81f-5a29-4e2b-a46c-e024049acb07')
@@ -88,7 +92,19 @@ class Master(object):
         """
         self.client = ApiClient()
         self.uuid = uuid
-        self.cached_data, _ = self.client.get('/masters/%s' % self.uuid)
+        self.reload_data(cached_data)
+
+    def reload_data(self, refreshed_datas=None):
+        """Reloads datas in the cached_data properties of the pupet master
+
+        :param refreshed_datas: Data to use to reload cached_data property of master
+        :type refreshed_datas: dict
+
+        """
+        if refreshed_datas:
+            self.cached_data = refreshed_datas
+        else:
+            self.cached_data, _ = self.client.get('/masters/%s' % self.uuid)
 
     @staticmethod
     def get_masters(client=None):
@@ -102,7 +118,7 @@ class Master(object):
 
         :Example:
 
-        >>> ppaas.Master.get_deploy_keys()
+        >>> ppaas.Master.get_masters()
         [<Puppet Master 0e85b81f-5a29-4e2b-a46c-e024049acb07>]
         """
         if not client:
@@ -110,7 +126,7 @@ class Master(object):
         result, status = client.get('/masters')
         masters = []
         for master in result['masters']:
-            masters.append(Master(master['id']))
+            masters.append(Master(master['id'], master))
         return masters
 
     @staticmethod
@@ -157,10 +173,10 @@ class Master(object):
         :rtype: List of ppaas.Certificate
 
         """
+        certificates = Certificate.get_certificates(self, self.client)
         if status is None:
-            return Certificate.get_certificates(self, self.client)
+            return certificates
         else:
-            certificates = Certificate.get_certificates(self, self.client)
             return [cert for cert in certificates if cert.status['message'] == status]
 
     def __repr__(self):
@@ -301,7 +317,6 @@ class Master(object):
         :return: The value of the field
         :rtype: Any primitive type
         """
-        data, status = self.client.get('/masters/%s' % self.uuid)
-        if name in data:
-            return data[name]
+        if name in self.cached_data:
+            return self.cached_data[name]
         return super(Master, self).__getattr__(name)
