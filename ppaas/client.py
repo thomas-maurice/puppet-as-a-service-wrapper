@@ -15,6 +15,7 @@
 
 import ConfigParser
 import requests
+from requests.compat import urljoin
 import json
 import os
 
@@ -69,30 +70,27 @@ class ApiClient():
         self.timeout = 10
 
     def get(self, url, params=None):
-        return self.call('GET', self.endpoint + url, params=params)
+        return self.call('GET', urljoin(self.endpoint, url), params=params)
 
     def post(self, url, data=None, params=None):
-        return self.call('POST', self.endpoint + url, data=data)
+        return self.call('POST', urljoin(self.endpoint, url), data=data)
 
     def put(self, url, data, params=None):
-        return self.call('PUT', self.endpoint + url, data=data, params=params)
+        return self.call('PUT', urljoin(self.endpoint, url), data=data, params=params)
 
     def delete(self, url, params=None):
-        return self.call('DELETE', self.endpoint + url, params=params)
+        return self.call('DELETE', urljoin(self.endpoint, url), params=params)
 
     def call(self, method, path, data=None, params=None):
         body = ''
         headers = {}
-        if data:
-            body = json.dumps(data)
-            headers.update({"Content-Type": "application/json"})
 
         call_result = requests.request(
             method,
             path,
             params=params,
             auth=(self.user, self.passw),
-            data=body,
+            json=body,
             timeout=self.timeout
         )
         status = call_result.status_code
