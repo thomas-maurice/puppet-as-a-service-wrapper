@@ -10,6 +10,9 @@ API exposed by [OVH](https://ovh.com).
 It should allow you to interact with the API in a more efficient and scriptable way
 than using the manager.
 
+## Install
+You can install this module via pip : `pip install ppaas`
+
 ## Use example
 ### Basic example
 ```
@@ -79,3 +82,8 @@ endpoint=https://puppet.runabove.io
 ## Contributing
 Feel free to contribute by submitting PRs ! The documentation for the API can be found
 [here](https://puppet.runabove.io/doc/index.html)
+
+## Contributors
+ * [Thomas Maurice](https://github.com/thomas-maurice)
+ * [Balthazar Rouberol](https://github.com/brouberol)
+ * [Romain Beuque](https://github.com/Rbeuque74)
