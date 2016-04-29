@@ -138,7 +138,7 @@ class Master(object):
 
         """
         payload = {"name": name, "source": source, "deploy_key": deploy_key, "nb": nb,
-                "hierarchy": hierarchy, "hieras": hieras, "vars": vars}
+                   "hierarchy": hierarchy, "hieras": hieras, "vars": vars}
         if type:
             payload["type"] = type
 
