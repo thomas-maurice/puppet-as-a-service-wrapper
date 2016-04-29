@@ -16,7 +16,6 @@
 import ConfigParser
 import requests
 from requests.compat import urljoin
-import json
 import os
 
 
@@ -54,7 +53,7 @@ class ApiClient():
         conf_file = None
         for path in [
             "ppaas.conf",
-            os.path.join(os.environ['HOME'], ".ppaas.conf"),
+            os.path.join(os.environ.get('HOME', ""), ".ppaas.conf"),
             "/etc/ppaas.conf"
         ]:
             if os.path.exists(path):
@@ -83,7 +82,6 @@ class ApiClient():
 
     def call(self, method, path, data=None, params=None):
         body = ''
-        headers = {}
 
         call_result = requests.request(
             method,
