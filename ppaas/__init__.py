@@ -4,7 +4,7 @@
 """Simple pythonic interface to OVH's Puppet as a Service Lab"""
 
 __author__  = "Thomas Maurice <thomas@maurice.fr>"
-__version__ = "0.0.2"
+__version__ = "0.0.3"
 __credits__ = ["Thomas Maurice", "Balthazar Rouberol", "Romain Beuque"]
 __status__  = "Developpement"
 __license__ = """
