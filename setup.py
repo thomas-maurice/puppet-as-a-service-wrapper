@@ -23,6 +23,7 @@ setup(
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
     ],
     install_requires=[
         'requests==2.9.1',

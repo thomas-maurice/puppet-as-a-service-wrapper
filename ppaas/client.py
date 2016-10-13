@@ -15,8 +15,9 @@
 
 import ConfigParser
 import requests
-from requests.compat import urljoin
 import os
+
+from requests.compat import urljoin
 
 
 class APIError(Exception):
