@@ -15,8 +15,8 @@
 
 import json
 
-from client import ApiClient
-from certificate import Certificate
+from .client import ApiClient
+from .certificate import Certificate
 
 
 def pretty_print(d):

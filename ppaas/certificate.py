@@ -13,7 +13,7 @@
   0. You just DO WHAT THE FUCK YOU WANT TO.
 """
 
-from client import ApiClient
+from .client import ApiClient
 
 
 class Certificate(object):

@@ -19,7 +19,7 @@ __license__ = """
   0. You just DO WHAT THE FUCK YOU WANT TO.
 """
 
-from master import Master
-from certificate import Certificate
-from deploy_key import DeployKey
-from client import ApiClient
+from .master import Master
+from .certificate import Certificate
+from .deploy_key import DeployKey
+from .client import ApiClient
